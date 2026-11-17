@@ -152,6 +152,8 @@ The flow is detect, plan, apply, verify, and later undo or restore.
 
 **Look.** A theme's page shows the theme in its own light or dark look (`colorScheme`) on its own wallpaper, blurred (`AmbientBackground`), and its Apply button takes the theme's accent color. The switcher, always dark, shows the selected theme's wallpaper, blurred, on every screen. The Apply sheet has the wallpaper as its header and the accent color on its Apply button. The sidebar, the sheet's list, Apps, History, and Settings follow macOS. `AppIcon` shows an app's own icon, found by bundle id, or a System Settings–style tile for macOS settings, Neovim, and apps that are not installed. `View.glass(in:)` uses Liquid Glass on macOS 26 and a material before.
 
+**Background presence.** The Dock/app-switcher and menu bar settings are independent. `AppModel.updateActivationPolicy` selects `.regular` or `.accessory` at launch and when the Dock setting changes. Scene stays running with both icons hidden. `AppDelegate` handles reopening from Finder or Spotlight through a retained SwiftUI `openWindow` action installed by `ContentView`, so the main window can return after it closes without changing either visibility setting. This is the same per-user app process, not a separate daemon.
+
 Settings and state live in `UserDefaults` (`com.insanearts.scene`):
 
 | Key | Meaning |
@@ -159,6 +161,7 @@ Settings and state live in `UserDefaults` (`com.insanearts.scene`):
 | `experimentalEnabled` | Private calls are on (default: on) |
 | `allowUntested` | Private calls may run on untested macOS builds |
 | `showMenuBarExtra` | Show the menu bar icon |
+| `showInDock` | Show Scene in the Dock and Command-Tab (default: on). Off uses the accessory activation policy, independently of the menu bar icon |
 | `favoriteThemes` | Starred theme ids. They come first in every list |
 | `themeSources` | The GitHub repository of each theme installed from one, by theme id |
 | `followSystemAppearance` | Switch the current theme's look when macOS switches Light/Dark (default: off) |

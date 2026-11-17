@@ -98,6 +98,8 @@ Requirements:
 
 Scene keeps running after you close its window, so the shortcuts keep working. Turn on Open Scene at login in Settings to keep them after a restart.
 
+To run Scene from the menu bar, turn off **Show Scene in the Dock and app switcher** in Settings → General and turn on **Show Scene in the menu bar**. You can turn both off to keep Scene in the background with its shortcuts. Close the window to put it away; open Scene from Finder or Spotlight to bring it back.
+
 ## Remove
 
 1. In Scene, open History and click Restore Original Setup.

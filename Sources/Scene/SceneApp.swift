@@ -5,11 +5,24 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 /// Scene keeps running after its window closes, so the theme switcher shortcut keeps working.
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    /// Keep the SwiftUI window action available after the window closes, including with both icons hidden.
+    static var openMainWindow: (() -> Void)?
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        // Let SwiftUI create the first window if Scene started at login without one.
+        guard let openMainWindow = Self.openMainWindow else { return true }
+        openMainWindow()
+        sender.activate(ignoringOtherApps: true)
+        return false
+    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         MainActor.assumeIsolated {
+            ThemeSwitcher.shared.model?.updateActivationPolicy()
             ThemeSwitcher.shared.model?.registerShortcuts()
             ThemeSwitcher.shared.model?.startFollowingAppearance()
             ThemeSwitcher.shared.model?.startWatchingLibrary()

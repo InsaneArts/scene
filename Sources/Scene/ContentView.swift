@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var importing = false
     @State private var columns = NavigationSplitViewVisibility.all
     @Environment(\.openSettings) private var openSettings
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         NavigationSplitView(columnVisibility: $columns) {
@@ -68,6 +69,7 @@ struct ContentView: View {
             await Snapshot.run(model: model, applying: $applying, page: $page, openSettings: { openSettings() })
         }
         .onOpenURL { url in Task { await model.importTheme(from: url) } }
+        .onAppear { AppDelegate.openMainWindow = { openWindow(id: "main") } }
         // An imported theme opens on its page, even from Apps or History.
         .onChange(of: model.selectedThemeID) { page = nil }
     }

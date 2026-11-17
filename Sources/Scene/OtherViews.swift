@@ -258,7 +258,7 @@ struct SettingsView: View {
         @Bindable var model = model
         // The window takes each tab's size, so each tab fits its content without scrolling.
         TabView(selection: $model.settingsTab) {
-            GeneralSettings().frame(width: 540, height: 440).tabItem { Label("General", systemImage: "gearshape") }.tag(SettingsTab.general)
+            GeneralSettings().frame(width: 540, height: 500).tabItem { Label("General", systemImage: "gearshape") }.tag(SettingsTab.general)
             ShortcutSettings().frame(width: 540, height: 500).tabItem { Label("Shortcuts", systemImage: "keyboard") }.tag(SettingsTab.shortcuts)
             ScriptSettings().frame(width: 540, height: 400).tabItem { Label("Scripts", systemImage: "terminal") }.tag(SettingsTab.scripts)
             ExperimentalSettings().frame(width: 540, height: 330).tabItem { Label("Experimental", systemImage: "flask") }.tag(SettingsTab.experimental)
@@ -275,9 +275,10 @@ struct GeneralSettings: View {
         Form {
             Section {
                 Toggle("Open Scene at login", isOn: Binding(get: { _ = model.loginItemVersion; return model.openAtLogin }, set: { model.openAtLogin = $0 }))
+                Toggle("Show Scene in the Dock and app switcher", isOn: $model.showInDock)
                 Toggle("Show Scene in the menu bar", isOn: $model.showMenuBarExtra)
             } footer: {
-                Text("The shortcuts work while Scene runs. Scene keeps running after you close its window. Choose which apps a theme changes on the Apps page of the main window.")
+                Text("Scene keeps running after you close its window, even with both icons hidden. Shortcuts keep working. Open Scene from Finder or Spotlight to bring its window back. Choose which apps a theme changes on the Apps page.")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Section {
