@@ -39,6 +39,17 @@ final class AppModel {
     var showMenuBarExtra: Bool {
         didSet { UserDefaults.standard.set(showMenuBarExtra, forKey: "showMenuBarExtra") }
     }
+    /// Accessory apps keep their windows and shortcuts without appearing in the Dock or Command-Tab.
+    var showInDock: Bool {
+        didSet {
+            UserDefaults.standard.set(showInDock, forKey: "showInDock")
+            updateActivationPolicy()
+        }
+    }
+
+    func updateActivationPolicy() {
+        NSApp.setActivationPolicy(showInDock ? .regular : .accessory)
+    }
     var disabledIntegrations: Set<String> {
         didSet { UserDefaults.standard.set(Array(disabledIntegrations), forKey: "disabledIntegrations") }
     }
@@ -129,10 +140,11 @@ final class AppModel {
 
     init() {
         let defaults = UserDefaults.standard
-        defaults.register(defaults: ["experimentalEnabled": true, "allowUntested": false, "showMenuBarExtra": false, "followSystemAppearance": false])
+        defaults.register(defaults: ["experimentalEnabled": true, "allowUntested": false, "showMenuBarExtra": false, "showInDock": true, "followSystemAppearance": false])
         experimentalEnabled = defaults.bool(forKey: "experimentalEnabled")
         allowUntested = defaults.bool(forKey: "allowUntested")
         showMenuBarExtra = defaults.bool(forKey: "showMenuBarExtra")
+        showInDock = defaults.bool(forKey: "showInDock")
         disabledIntegrations = Set(defaults.stringArray(forKey: "disabledIntegrations") ?? [])
         favoriteThemes = Set(defaults.stringArray(forKey: "favoriteThemes") ?? [])
         themeSources = defaults.dictionary(forKey: "themeSources") as? [String: String] ?? [:]
