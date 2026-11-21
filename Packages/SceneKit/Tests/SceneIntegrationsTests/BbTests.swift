@@ -50,6 +50,14 @@ struct BbTests {
         #expect(report.results.first?.outcome != .applied)
     }
 
+    @Test func babashkaIsNotBb() async throws {
+        let home = try FixtureHome()
+        let (services, engine) = try setup(home)
+        services.responses["bb --version"] = CLIResult(status: 0, stdout: "babashka v1.12.200\n", stderr: "")
+        let detection = await BbIntegration().detect(engine.env, services)
+        #expect(!detection.installed)
+    }
+
     @Test func theStylesheetHasABlockPerLookAndTheWholeTerminalPalette() throws {
         let theme = try Fixtures.theme("catppuccin")
         let light = try #require(theme.variants[.light]), dark = try #require(theme.variants[.dark])

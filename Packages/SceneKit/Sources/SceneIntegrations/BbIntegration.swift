@@ -19,6 +19,8 @@ public struct BbIntegration: Integration {
         if let result = try? await services.run(bb.path, ["--version"], environment: nil), result.status == 0 {
             version = result.stdout.trimmingCharacters(in: .whitespacesAndNewlines)
         }
+        // Babashka, the Clojure scripting tool, is also called bb.
+        if version?.lowercased().hasPrefix("babashka") == true { return .notInstalled() }
         // bb knows where its data lives, which depends on how it was installed. Its default is ~/.bb/theme.
         var folder = env.path(".bb/theme")
         if let result = try? await services.run(bb.path, ["theme", "dir"], environment: nil), result.status == 0 {
